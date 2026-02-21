@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Jeam Mobile's — Professional Repair Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   THEME SYSTEM
+═══════════════════════════════════════════ */
+:root {
+  --bg:       #0e0e0e;
+  --bg2:      #161616;
+  --bg3:      #1e1e1e;
+  --bg4:      #252525;
+  --border:   rgba(255,255,255,0.08);
+  --border2:  rgba(255,255,255,0.14);
+  --text:     #f0f0f0;
+  --text2:    #a0a0a0;
+  --text3:    #606060;
+  --accent:   #ff6b2b;
+  --accent2:  #ff8f5a;
+  --accent3:  rgba(255,107,43,0.12);
+  --green:    #00d97e;
+  --red:      #ff4757;
+  --gold:     #ffd43b;
+  --blue:     #4dabf7;
+  --card:     #161616;
+  --input-bg: #1a1a1a;
+  --shadow:   0 8px 32px rgba(0,0,0,0.4);
+  --radius:   14px;
+  --font-head:'Syne',sans-serif;
+  --font-body:'Epilogue',sans-serif;
+}
+[data-theme="light"] {
+  --bg:       #f5f5f0;
+  --bg2:      #eeede8;
+  --bg3:      #e8e7e2;
+  --bg4:      #dddcd7;
+  --border:   rgba(0,0,0,0.08);
+  --border2:  rgba(0,0,0,0.14);
+  --text:     #111111;
+  --text2:    #555555;
+  --text3:    #999999;
+  --accent:   #e85d1a;
+  --accent2:  #ff6b2b;
+  --accent3:  rgba(232,93,26,0.1);
+  --card:     #ffffff;
+  --input-bg: #f0efea;
+  --shadow:   0 8px 32px rgba(0,0,0,0.1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  transition:background 0.3s,color 0.3s;
+  overflow-x:hidden;
+}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;}
+
+/* ═══════════════════════════════════════════
+   LOGIN SCREEN
+═══════════════════════════════════════════ */
+#login-screen{
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+  position:relative;overflow:hidden;
+}
+.login-noise{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:0.4;
+}
+.login-glow{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,107,43,0.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.login-card{
+  position:relative;z-index:2;
+  width:100%;max-width:420px;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:2.5rem;
+  margin:1.5rem;
+  box-shadow:0 0 80px rgba(255,107,43,0.06),var(--shadow);
+  animation:slideUp 0.6s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.login-logo{
+  text-align:center;margin-bottom:2rem;
+}
+.login-logo .logo-icon{
+  width:64px;height:64px;border-radius:16px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;margin:0 auto 1rem;
+  box-shadow:0 8px 24px rgba(255,107,43,0.35);
+}
+.login-logo h1{
+  font-family:var(--font-head);font-size:1.7rem;font-weight:800;
+  letter-spacing:-0.02em;
+}
+.login-logo h1 span{color:var(--accent);}
+.login-logo p{color:var(--text2);font-size:0.82rem;margin-top:4px;}
+
+.login-err{
+  display:none;background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.25);
+  border-radius:8px;padding:10px 14px;font-size:0.82rem;color:var(--red);
+  margin-bottom:1rem;
+}
+.login-err.show{display:flex;align-items:center;gap:8px;}
+
+.fgroup{margin-bottom:1rem;}
+.fgroup label{display:block;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:6px;}
+.fgroup input,.fgroup select,.fgroup textarea{
+  width:100%;padding:12px 14px;
+  background:var(--input-bg);
+  border:1.5px solid var(--border);
+  border-radius:10px;color:var(--text);
+  font-family:var(--font-body);font-size:0.9rem;
+  outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+}
+.fgroup input:focus,.fgroup select:focus,.fgroup textarea:focus{
+  border-color:var(--accent);box-shadow:0 0 0 3px rgba(255,107,43,0.12);
+}
+.fgroup input::placeholder,.fgroup textarea::placeholder{color:var(--text3);}
+.fgroup select option{background:var(--bg2);}
+
+.btn-primary{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border:none;border-radius:10px;
+  font-family:var(--font-head);font-weight:700;font-size:0.95rem;
+  cursor:pointer;transition:all 0.25s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,43,0.4);}
+.btn-primary:active{transform:translateY(0);}
+.btn-primary.loading{opacity:0.7;pointer-events:none;}
+
+.btn-secondary{
+  padding:9px 18px;background:var(--bg3);
+  color:var(--text);border:1px solid var(--border);
+  border-radius:8px;font-family:var(--font-body);font-size:0.85rem;
+  font-weight:500;cursor:pointer;transition:all 0.2s;
+}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+
+.btn-danger{
+  padding:9px 18px;background:rgba(255,71,87,0.1);
+  color:var(--red);border:1px solid rgba(255,71,87,0.25);
+  border-radius:8px;font-family:var(--font-body);font-size:0.85rem;
+  font-weight:500;cursor:pointer;transition:all 0.2s;
+}
+.btn-danger:hover{background:var(--red);color:#fff;}
+
+.spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;display:none;}
+.loading .spinner{display:block;}
+.loading .btn-text{display:none;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ═══════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════ */
+#app{display:none;min-height:100vh;flex-direction:column;}
+#app.visible{display:flex;}
+
+/* TOP BAR */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:0 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  height:60px;
+  backdrop-filter:blur(12px);
+}
+.topbar-logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--font-head);font-weight:800;font-size:1.1rem;
+}
+.topbar-logo .tl-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;font-size:0.9rem;
+}
+.topbar-logo span{color:var(--accent);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.theme-toggle{
+  width:36px;height:36px;border-radius:8px;
+  background:var(--bg3);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1rem;transition:all 0.2s;
+}
+.theme-toggle:hover{border-color:var(--accent);}
+.logout-btn{
+  padding:6px 14px;background:rgba(255,71,87,0.1);color:var(--red);
+  border:1px solid rgba(255,71,87,0.2);border-radius:7px;
+  font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;
+  font-family:var(--font-body);
+}
+.logout-btn:hover{background:var(--red);color:#fff;}
+.admin-chip{
+  background:var(--accent3);color:var(--accent);
+  border:1px solid rgba(255,107,43,0.25);
+  padding:4px 10px;border-radius:50px;
+  font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+}
+
+/* MAIN LAYOUT */
+.app-body{display:flex;flex:1;overflow:hidden;}
+.sidebar{
+  width:220px;flex-shrink:0;
+  background:var(--bg2);border-right:1px solid var(--border);
+  padding:1.5rem 0;
+  overflow-y:auto;
+}
+.sidebar-nav{list-style:none;}
+.sidebar-nav li{margin-bottom:2px;}
+.sidebar-nav a{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 1.5rem;border-radius:0;
+  color:var(--text2);font-size:0.86rem;font-weight:500;
+  text-decoration:none;transition:all 0.2s;
+  cursor:pointer;border-left:3px solid transparent;
+}
+.sidebar-nav a:hover{color:var(--text);background:var(--bg3);}
+.sidebar-nav a.active{color:var(--accent);background:var(--accent3);border-left-color:var(--accent);}
+.sidebar-nav .nav-icon{font-size:1rem;width:20px;text-align:center;}
+.sidebar-section-label{padding:1.2rem 1.5rem 0.4rem;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);}
+
+.main-content{flex:1;overflow-y:auto;padding:1.5rem;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ═══════════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════════ */
+.page-title{
+  font-family:var(--font-head);font-size:1.5rem;font-weight:800;
+  margin-bottom:0.3rem;letter-spacing:-0.02em;
+}
+.page-sub{color:var(--text2);font-size:0.85rem;margin-bottom:1.5rem;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem;}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.2rem;
+  position:relative;overflow:hidden;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+.stat-icon{font-size:1.6rem;margin-bottom:0.6rem;display:block;}
+.stat-num{
+  font-family:var(--font-head);font-size:2rem;font-weight:800;
+  line-height:1;margin-bottom:4px;
+}
+.stat-label{font-size:0.75rem;color:var(--text2);font-weight:500;}
+.stat-delta{font-size:0.72rem;color:var(--green);margin-top:4px;}
+
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;}
+.dash-card-title{font-family:var(--font-head);font-size:0.9rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+.dash-card-title .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;}
+
+/* ═══════════════════════════════════════════
+   FINGERPRINT SECTION
+═══════════════════════════════════════════ */
+.fp-section{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.5rem;
+  margin-bottom:1.5rem;
+}
+.fp-title{font-family:var(--font-head);font-size:1rem;font-weight:700;margin-bottom:1rem;}
+.fp-area{
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+}
+.fp-scanner{
+  width:120px;height:140px;
+  background:var(--bg3);border:2px dashed var(--border2);
+  border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;transition:all 0.3s;flex-shrink:0;
+  position:relative;overflow:hidden;
+}
+.fp-scanner::after{
+  content:'';position:absolute;top:-100%;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  animation:none;
+}
+.fp-scanner.scanning::after{animation:fpScan 1.5s linear infinite;}
+@keyframes fpScan{from{top:-100%}to{top:100%}}
+.fp-scanner.scanning{border-color:var(--accent);background:rgba(255,107,43,0.05);}
+.fp-scanner.success{border-color:var(--green);background:rgba(0,217,126,0.05);}
+.fp-icon{font-size:2.5rem;}
+.fp-label{font-size:0.72rem;color:var(--text2);text-align:center;font-weight:500;}
+.fp-result{flex:1;}
+.fp-result-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:1rem;
+  display:none;
+}
+.fp-result-card.show{display:block;}
+.fp-customer-name{font-family:var(--font-head);font-size:1.1rem;font-weight:700;}
+.fp-customer-meta{font-size:0.8rem;color:var(--text2);margin-top:4px;}
+.fp-history{margin-top:0.8rem;}
+.fp-history-title{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text3);margin-bottom:6px;}
+.fp-history-item{font-size:0.8rem;color:var(--text2);padding:4px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;}
+
+/* ═══════════════════════════════════════════
+   FORMS
+═══════════════════════════════════════════ */
+.form-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.5rem;
+}
+.form-section-title{
+  font-family:var(--font-head);font-size:0.85rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);
+  margin-bottom:1rem;padding-bottom:0.5rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+
+.color-picker-wrap{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.color-dot{
+  width:28px;height:28px;border-radius:50%;cursor:pointer;
+  border:3px solid transparent;transition:all 0.2s;
+}
+.color-dot.selected{border-color:var(--accent);transform:scale(1.2);}
+
+/* PHOTO/VIDEO UPLOAD */
+.media-upload-area{
+  border:2px dashed var(--border2);border-radius:10px;
+  padding:1.5rem;text-align:center;cursor:pointer;
+  transition:all 0.2s;background:var(--input-bg);
+}
+.media-upload-area:hover{border-color:var(--accent);background:var(--accent3);}
+.media-upload-area .upload-icon{font-size:2rem;margin-bottom:0.5rem;display:block;}
+.media-upload-area p{font-size:0.82rem;color:var(--text2);}
+.media-upload-area input[type=file]{display:none;}
+.media-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.media-thumb{
+  width:80px;height:80px;border-radius:8px;
+  object-fit:cover;border:2px solid var(--border);
+  position:relative;
+}
+.media-thumb-wrap{position:relative;width:80px;}
+.media-thumb-wrap .rm-media{
+  position:absolute;top:-4px;right:-4px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--red);color:#fff;border:none;
+  font-size:0.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.video-thumb{width:80px;height:80px;border-radius:8px;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+
+/* PRICE INPUT */
+.price-input-wrap{position:relative;}
+.price-input-wrap::before{
+  content:'₦';position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--accent);font-weight:700;font-size:1rem;pointer-events:none;
+}
+.price-input-wrap input{padding-left:28px !important;}
+
+/* SUBMIT BAR */
+.submit-bar{
+  position:sticky;bottom:0;
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:1rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+  margin:0 -1.5rem -1.5rem;
+}
+.submit-bar .submit-info{font-size:0.82rem;color:var(--text2);}
+
+.btn-submit{
+  padding:12px 32px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;border:none;border-radius:10px;
+  font-family:var(--font-head);font-weight:700;font-size:0.95rem;
+  cursor:pointer;transition:all 0.25s;
+  display:flex;align-items:center;gap:8px;
+}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,43,0.4);}
+
+/* ═══════════════════════════════════════════
+   JOBS TABLE
+═══════════════════════════════════════════ */
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:1rem;flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1;min-width:200px;}
+.search-wrap input{padding-left:36px !important;width:100%;}
+.search-wrap::before{content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:0.85rem;pointer-events:none;}
+
+.jobs-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.jobs-table{width:100%;border-collapse:collapse;}
+.jobs-table th{
+  background:var(--bg3);color:var(--text2);
+  font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+  padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);
+}
+.jobs-table td{
+  padding:12px 14px;font-size:0.85rem;
+  border-bottom:1px solid var(--border);vertical-align:middle;
+}
+.jobs-table tr:last-child td{border:none;}
+.jobs-table tr:hover td{background:var(--bg3);}
+
+.status-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:50px;font-size:0.72rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;
+}
+.s-pending{background:rgba(255,212,59,0.15);color:var(--gold);}
+.s-working{background:rgba(77,171,247,0.15);color:var(--blue);}
+.s-done{background:rgba(0,217,126,0.15);color:var(--green);}
+.s-collected{background:rgba(160,160,160,0.15);color:var(--text2);}
+.s-cancelled{background:rgba(255,71,87,0.15);color:var(--red);}
+
+.job-phone{font-weight:600;color:var(--text);}
+.job-problem{color:var(--text2);font-size:0.8rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.job-price{font-weight:700;color:var(--accent);}
+.job-actions{display:flex;gap:6px;}
+.act-btn{
+  width:30px;height:30px;border-radius:7px;border:1px solid var(--border);
+  background:var(--bg3);cursor:pointer;font-size:0.85rem;
+  display:flex;align-items:center;justify-content:center;transition:all 0.2s;
+}
+.act-btn:hover{border-color:var(--accent);background:var(--accent3);}
+
+/* CUSTOMER AVATAR */
+.cust-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0;
+  overflow:hidden;
+}
+.cust-avatar img{width:100%;height:100%;object-fit:cover;}
+.cust-cell{display:flex;align-items:center;gap:8px;}
+.cust-name{font-weight:600;}
+.cust-phone{font-size:0.75rem;color:var(--text2);}
+
+/* ═══════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;padding:1rem;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:20px;width:100%;max-width:680px;
+  max-height:90vh;overflow-y:auto;
+  animation:modalIn 0.3s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+.modal-header{
+  padding:1.5rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--bg2);z-index:1;
+}
+.modal-title{font-family:var(--font-head);font-size:1.1rem;font-weight:800;}
+.modal-close{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:var(--bg3);cursor:pointer;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-body{padding:1.5rem;}
+.modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
+
+/* RECEIPT */
+.receipt{
+  background:#fff;color:#111;
+  border-radius:12px;padding:2rem;font-family:'Courier New',monospace;
+  max-width:400px;margin:0 auto;
+}
+.receipt-header{text-align:center;border-bottom:2px dashed #ccc;padding-bottom:1rem;margin-bottom:1rem;}
+.receipt-logo{font-size:1.5rem;font-weight:900;letter-spacing:-0.02em;}
+.receipt-logo span{color:var(--accent);}
+.receipt-sub{font-size:0.75rem;color:#666;margin-top:4px;}
+.receipt-row{display:flex;justify-content:space-between;padding:4px 0;font-size:0.82rem;}
+.receipt-row.total{font-weight:700;border-top:1px solid #ccc;margin-top:8px;padding-top:8px;font-size:0.95rem;}
+.receipt-divider{border:none;border-top:1px dashed #ccc;margin:10px 0;}
+.receipt-section-title{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-top:12px;margin-bottom:4px;}
+.receipt-footer{text-align:center;margin-top:1rem;font-size:0.72rem;color:#888;border-top:2px dashed #ccc;padding-top:1rem;}
+
+/* CUSTOMERS PAGE */
+.customers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;}
+.customer-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.2rem;
+  transition:all 0.2s;cursor:pointer;
+}
+.customer-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:var(--shadow);}
+.cc-header{display:flex;align-items:center;gap:12px;margin-bottom:1rem;}
+.cc-avatar{
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;
+}
+.cc-avatar img{width:100%;height:100%;object-fit:cover;}
+.cc-name{font-family:var(--font-head);font-weight:700;font-size:1rem;}
+.cc-phone-num{font-size:0.78rem;color:var(--text2);}
+.cc-fp-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(0,217,126,0.1);color:var(--green);
+  border:1px solid rgba(0,217,126,0.25);
+  padding:2px 8px;border-radius:50px;font-size:0.7rem;font-weight:600;
+  margin-top:6px;
+}
+.cc-stats{display:flex;gap:1rem;margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid var(--border);}
+.cc-stat{display:flex;flex-direction:column;gap:2px;}
+.cc-stat-num{font-family:var(--font-head);font-weight:700;font-size:1rem;color:var(--accent);}
+.cc-stat-label{font-size:0.7rem;color:var(--text2);}
+
+/* TOAST */
+.toast-container{position:fixed;top:70px;right:16px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:12px 16px;
+  font-size:0.85rem;min-width:240px;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:var(--shadow);
+  animation:toastIn 0.3s ease both;
+}
+.toast.removing{animation:toastOut 0.3s ease both;}
+@keyframes toastIn{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+@keyframes toastOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(100%)}}
+.toast.success{border-left:3px solid var(--green);}
+.toast.error{border-left:3px solid var(--red);}
+.toast.info{border-left:3px solid var(--blue);}
+
+/* EMPTY STATE */
+.empty-state{
+  text-align:center;padding:4rem 2rem;color:var(--text2);
+}
+.empty-state .empty-icon{font-size:3rem;margin-bottom:1rem;display:block;opacity:0.4;}
+.empty-state p{font-size:0.9rem;}
+
+/* STATUS SELECT */
+.status-select{
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--text);padding:5px 10px;border-radius:6px;
+  font-family:var(--font-body);font-size:0.8rem;cursor:pointer;
+}
+
+/* COLOR TAG */
+.color-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:0.78rem;color:var(--text2);
+}
+.color-swatch{width:12px;height:12px;border-radius:50%;border:1px solid var(--border2);}
+
+/* CAMERA */
+.camera-section{margin-top:1rem;}
+.camera-wrap{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;aspect-ratio:4/3;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text3);font-size:0.85rem;position:relative;
+}
+.camera-wrap video,.camera-wrap canvas{width:100%;height:100%;object-fit:cover;}
+.camera-controls{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.capture-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.capture-img{width:80px;height:80px;border-radius:8px;object-fit:cover;border:2px solid var(--border);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .form-row,.form-row-3{grid-template-columns:1fr;}
+  .dash-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+}
+
+/* TAG */
+.tag{
+  display:inline-block;padding:2px 8px;
+  border-radius:4px;font-size:0.7rem;font-weight:600;
+  background:var(--accent3);color:var(--accent);
+}
+
+/* RECENT JOBS IN DASH */
+.recent-job-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid var(--border);
+  font-size:0.82rem;
+}
+.recent-job-row:last-child{border:none;}
+.rj-name{font-weight:600;}
+.rj-phone{color:var(--text2);}
+.rj-price{font-weight:700;color:var(--accent);}
+
+/* JOB DETAIL */
+.detail-section{margin-bottom:1.5rem;}
+.detail-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:4px;}
+.detail-value{font-size:0.92rem;color:var(--text);}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.media-gallery{display:flex;gap:8px;flex-wrap:wrap;}
+.gallery-item{width:100px;height:100px;border-radius:10px;object-fit:cover;border:2px solid var(--border);cursor:pointer;}
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toasts"></div>
+
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-noise"></div>
+  <div class="login-glow"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">📱</div>
+      <h1>Jeam <span>Mobile's</span></h1>
+      <p>Professional Repair Management System</p>
+    </div>
+    <div class="login-err" id="login-err"><span>⚠️</span><span id="login-err-msg">Invalid credentials.</span></div>
+    <div class="fgroup">
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="Enter username" />
+    </div>
+    <div class="fgroup">
+      <label>Password</label>
+      <input type="password" id="login-pwd" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <button class="btn-primary" id="login-btn" onclick="doLogin()">
+      <div class="spinner"></div>
+      <span class="btn-text">🔓 Sign In</span>
+    </button>
+    <p style="text-align:center;font-size:0.75rem;color:var(--text3);margin-top:1rem;">Default: admin / jeam2024</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP
+══════════════════════════════════════════ -->
+<div id="app">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="tl-icon">📱</div>
+      Jeam <span>Mobile's</span>
+    </div>
+    <div class="topbar-right">
+      <div class="admin-chip" id="top-role">Admin</div>
+      <div class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</div>
+      <button class="logout-btn" onclick="doLogout()">⏻ Logout</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section-label">Main</div>
+      <ul class="sidebar-nav">
+        <li><a onclick="goto('dashboard')" class="active" id="nav-dashboard"><span class="nav-icon">📊</span> Dashboard</a></li>
+        <li><a onclick="goto('new-job')" id="nav-new-job"><span class="nav-icon">➕</span> New Repair Job</a></li>
+        <li><a onclick="goto('jobs')" id="nav-jobs"><span class="nav-icon">🔧</span> All Jobs</a></li>
+        <li><a onclick="goto('customers')" id="nav-customers"><span class="nav-icon">👥</span> Customers</a></li>
+      </ul>
+      <div class="sidebar-section-label">Tools</div>
+      <ul class="sidebar-nav">
+        <li><a onclick="goto('reports')" id="nav-reports"><span class="nav-icon">📈</span> Reports</a></li>
+        <li><a onclick="goto('settings')" id="nav-settings"><span class="nav-icon">⚙️</span> Settings</a></li>
+      </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content" id="main-content">
+
+      <!-- ═══════════════ DASHBOARD ═══════════════ -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-title">Dashboard 📊</div>
+        <div class="page-sub" id="dash-greeting">Good morning! Here's your repair shop overview.</div>
+
+        <div class="stats-grid" id="dash-stats">
+          <div class="stat-card">
+            <span class="stat-icon">🔧</span>
+            <div class="stat-num" id="stat-total">0</div>
+            <div class="stat-label">Total Jobs</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">⏳</span>
+            <div class="stat-num" id="stat-pending">0</div>
+            <div class="stat-label">Pending / In Progress</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">✅</span>
+            <div class="stat-num" id="stat-done">0</div>
+            <div class="stat-label">Completed</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">💰</span>
+            <div class="stat-num" id="stat-revenue">₦0</div>
+            <div class="stat-label">Total Revenue</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">👥</span>
+            <div class="stat-num" id="stat-customers">0</div>
+            <div class="stat-label">Customers</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">🔁</span>
+            <div class="stat-num" id="stat-returning">0</div>
+            <div class="stat-label">Returning Customers</div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="dash-card">
+            <div class="dash-card-title"><span class="dot"></span>Recent Jobs</div>
+            <div id="dash-recent-jobs"><div class="empty-state"><span class="empty-icon">📋</span><p>No jobs yet</p></div></div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-card-title"><span class="dot"></span>Job Status Breakdown</div>
+            <div id="dash-status-breakdown"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ NEW JOB ═══════════════ -->
+      <div class="page" id="page-new-job">
+        <div class="page-title">New Repair Job ➕</div>
+        <div class="page-sub">Register a new device for repair.</div>
+
+        <!-- FINGERPRINT SECTION -->
+        <div class="fp-section">
+          <div class="fp-title">🔍 Returning Customer Check</div>
+          <div class="fp-area">
+            <div class="fp-scanner" id="fp-scanner" onclick="scanFingerprint()">
+              <div class="fp-icon">🫵</div>
+              <div class="fp-label">Click to scan<br>fingerprint</div>
+            </div>
+            <div class="fp-result">
+              <div id="fp-status" style="font-size:0.82rem;color:var(--text2);margin-bottom:10px;">Place finger on scanner or click to simulate scan</div>
+              <div class="fp-result-card" id="fp-result-card">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.5rem;">
+                  <div class="cust-avatar" id="fp-avatar">?</div>
+                  <div>
+                    <div class="fp-customer-name" id="fp-cust-name">—</div>
+                    <div class="fp-customer-meta" id="fp-cust-meta">—</div>
+                  </div>
+                </div>
+                <div class="fp-history">
+                  <div class="fp-history-title">📋 Previous Repairs</div>
+                  <div id="fp-history-list"></div>
+                </div>
+                <button class="btn-primary" style="margin-top:10px;padding:8px 16px;font-size:0.82rem;" onclick="loadCustomerToForm()">✅ Use This Customer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- JOB FORM -->
+        <div class="form-card">
+          <div class="form-section-title">👤 Customer Information</div>
+          <div class="form-row">
+            <div class="fgroup">
+              <label>Full Name *</label>
+              <input type="text" id="f-name" placeholder="Customer full name" />
+            </div>
+            <div class="fgroup">
+              <label>Phone Number *</label>
+              <input type="tel" id="f-phone" placeholder="08XXXXXXXXX" />
+            </div>
+          </div>
+
+          <!-- CAMERA / PHOTO -->
+          <div class="form-section-title" style="margin-top:1.5rem;">📸 Customer Photo & Video</div>
+          <div class="form-row">
+            <div>
+              <div class="media-upload-area" onclick="document.getElementById('photo-upload').click()">
+                <span class="upload-icon">🖼️</span>
+                <p>Upload customer photo<br><small>Click or drag & drop</small></p>
+                <input type="file" id="photo-upload" accept="image/*" multiple onchange="handlePhotoUpload(event)" />
+              </div>
+              <div class="media-preview" id="photo-preview"></div>
+            </div>
+            <div>
+              <div class="media-upload-area" onclick="document.getElementById('video-upload').click()">
+                <span class="upload-icon">🎥</span>
+                <p>Upload video of device<br><small>Click or drag & drop</small></p>
+                <input type="file" id="video-upload" accept="video/*" multiple onchange="handleVideoUpload(event)" />
+              </div>
+              <div class="media-preview" id="video-preview"></div>
+            </div>
+          </div>
+          <!-- Live Camera -->
+          <div class="camera-section">
+            <div style="font-size:0.82rem;color:var(--text2);margin-bottom:8px;">Or take photo with camera:</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+              <button class="btn-secondary" onclick="startCamera()">📷 Open Camera</button>
+              <button class="btn-secondary" id="snap-btn" style="display:none;" onclick="snapPhoto()">📸 Capture</button>
+              <button class="btn-secondary" id="stop-cam-btn" style="display:none;" onclick="stopCamera()">✖ Close Camera</button>
+            </div>
+            <div class="camera-wrap" id="camera-wrap" style="display:none;">
+              <video id="camera-video" autoplay playsinline></video>
+            </div>
+            <canvas id="snap-canvas" style="display:none;"></canvas>
+            <div class="capture-preview" id="capture-preview"></div>
+          </div>
+
+          <div class="form-section-title" style="margin-top:1.5rem;">📱 Device Information</div>
+          <div class="form-row">
+            <div class="fgroup">
+              <label>Phone/Device Name *</label>
+              <input type="text" id="f-device" placeholder="e.g. Samsung Galaxy A54, iPhone 14" />
+            </div>
+            <div class="fgroup">
+              <label>Phone Color</label>
+              <input type="text" id="f-color-text" placeholder="e.g. Midnight Black" />
+              <div class="color-picker-wrap" id="color-picker">
+                <div class="color-dot selected" style="background:#111111;" title="Black" data-color="Black" onclick="pickColor(this)"></div>
+                <div class="color-dot" style="background:#ffffff;border:2px solid #ccc;" title="White" data-color="White" onclick="pickColor(this)"></div>
+                <div class="color-dot" style="background:#1e90ff;" title="Blue" data-color="Blue" onclick="pickColor(this)"></div>
+                <div class="color-dot" style="background:#ff4757;" title="Red" data-color="Red" onclick="pickColor(this)"></div>
+                <div class="color-dot" style="background:#2ed573;" title="Green" data-color="Green" onclick="pickColor(this)"></div>
+                <div class="color-dot" style="background:#ffd43b;" title="Gold" data-color="Gold" onclick="pickColor(this)"></div>
+                <div class="color-dot" style="background:#c0c0c0;" title="Silver" data-color="Silver" onclick="pickColor(this)"></div>
+                <div class="color-dot" style="background:#9b59b6;" title="Purple" data-color="Purple" onclick="pickColor(this)"></div>
+                <div class="color-dot" style="background:#ff6b2b;" title="Orange" data-color="Orange" onclick="pickColor(this)"></div>
+                <div class="color-dot" style="background:#f8f0e3;" title="Rose Gold" data-color="Rose Gold" onclick="pickColor(this)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fgroup">
+            <label>Problem / Fault Description *</label>
+            <textarea id="f-problem" placeholder="Describe the issue with the device in detail..." rows="4"></textarea>
+          </div>
+
+          <div class="form-section-title" style="margin-top:1.5rem;">💰 Pricing & Status</div>
+          <div class="form-row-3">
+            <div class="fgroup">
+              <label>Repair Price (₦) *</label>
+              <div class="price-input-wrap">
+                <input type="number" id="f-price" placeholder="0.00" min="0" />
+              </div>
+            </div>
+            <div class="fgroup">
+              <label>Job Status</label>
+              <select id="f-status">
+                <option value="pending">⏳ Pending</option>
+                <option value="working">🔧 In Progress</option>
+                <option value="done">✅ Done</option>
+                <option value="collected">📦 Collected</option>
+              </select>
+            </div>
+            <div class="fgroup">
+              <label>Technician</label>
+              <input type="text" id="f-tech" placeholder="Assigned to..." />
+            </div>
+          </div>
+          <div class="fgroup">
+            <label>Additional Notes</label>
+            <textarea id="f-notes" placeholder="Parts needed, special instructions, customer remarks..." rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="submit-bar">
+          <div class="submit-info">All fields marked * are required</div>
+          <div style="display:flex;gap:10px;">
+            <button class="btn-secondary" onclick="clearForm()">🗑 Clear</button>
+            <button class="btn-submit" onclick="saveJob()">💾 Save Repair Job</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ ALL JOBS ═══════════════ -->
+      <div class="page" id="page-jobs">
+        <div class="page-title">All Repair Jobs 🔧</div>
+        <div class="page-sub">Manage and track all repair jobs.</div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <input type="text" id="jobs-search" placeholder="Search by name, phone, device..." oninput="renderJobs()" />
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <select class="status-select" id="jobs-filter" onchange="renderJobs()">
+              <option value="">All Status</option>
+              <option value="pending">⏳ Pending</option>
+              <option value="working">🔧 In Progress</option>
+              <option value="done">✅ Done</option>
+              <option value="collected">📦 Collected</option>
+              <option value="cancelled">❌ Cancelled</option>
+            </select>
+            <button class="btn-secondary" onclick="exportCSV()">📥 Export CSV</button>
+          </div>
+        </div>
+        <div class="jobs-table-wrap">
+          <table class="jobs-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Device</th>
+                <th>Problem</th>
+                <th>Color</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="jobs-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══════════════ CUSTOMERS ═══════════════ -->
+      <div class="page" id="page-customers">
+        <div class="page-title">Customers 👥</div>
+        <div class="page-sub">All registered customers and their repair history.</div>
+        <div class="toolbar">
+          <div class="search-wrap" style="max-width:300px;">
+            <input type="text" id="cust-search" placeholder="Search customers..." oninput="renderCustomers()" />
+          </div>
+          <div id="cust-count" style="font-size:0.85rem;color:var(--text2);"></div>
+        </div>
+        <div class="customers-grid" id="customers-grid"></div>
+      </div>
+
+      <!-- ═══════════════ REPORTS ═══════════════ -->
+      <div class="page" id="page-reports">
+        <div class="page-title">Reports 📈</div>
+        <div class="page-sub">Business performance overview.</div>
+        <div class="stats-grid">
+          <div class="stat-card"><span class="stat-icon">💵</span><div class="stat-num" id="rep-revenue">₦0</div><div class="stat-label">Total Revenue</div></div>
+          <div class="stat-card"><span class="stat-icon">✅</span><div class="stat-num" id="rep-done">0</div><div class="stat-label">Jobs Completed</div></div>
+          <div class="stat-card"><span class="stat-icon">👥</span><div class="stat-num" id="rep-custs">0</div><div class="stat-label">Total Customers</div></div>
+          <div class="stat-card"><span class="stat-icon">📱</span><div class="stat-num" id="rep-avg">₦0</div><div class="stat-label">Avg. Job Value</div></div>
+        </div>
+        <div class="form-card" style="margin-top:1rem;">
+          <div class="dash-card-title"><span class="dot"></span>Top Devices Repaired</div>
+          <div id="rep-devices"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════════ SETTINGS ═══════════════ -->
+      <div class="page" id="page-settings">
+        <div class="page-title">Settings ⚙️</div>
+        <div class="page-sub">Configure your repair shop system.</div>
+        <div class="form-card">
+          <div class="form-section-title">🏪 Shop Information</div>
+          <div class="form-row">
+            <div class="fgroup"><label>Shop Name</label><input type="text" id="set-shopname" placeholder="Jeam Mobile's" /></div>
+            <div class="fgroup"><label>Phone Number</label><input type="text" id="set-shopphone" placeholder="+234..." /></div>
+          </div>
+          <div class="fgroup"><label>Address</label><input type="text" id="set-address" placeholder="Shop address" /></div>
+
+          <div class="form-section-title" style="margin-top:1.5rem;">🔐 Change Password</div>
+          <div class="form-row">
+            <div class="fgroup"><label>New Username</label><input type="text" id="set-user" placeholder="Username" /></div>
+            <div class="fgroup"><label>New Password</label><input type="password" id="set-pwd" placeholder="Password" /></div>
+          </div>
+
+          <div class="form-section-title" style="margin-top:1.5rem;">🎨 Theme</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;">
+            <button class="btn-secondary" onclick="setTheme('dark')" id="theme-dark-btn">🌙 Dark Mode</button>
+            <button class="btn-secondary" onclick="setTheme('light')" id="theme-light-btn">☀️ Light Mode</button>
+          </div>
+
+          <div class="form-section-title" style="margin-top:1rem;">⚠️ Data Management</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn-secondary" onclick="exportAllData()">📥 Export All Data (JSON)</button>
+            <button class="btn-danger" onclick="clearAllData()">🗑 Clear All Data</button>
+          </div>
+
+          <div style="margin-top:1.5rem;">
+            <button class="btn-submit" onclick="saveSettings()">💾 Save Settings</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /main-content -->
+  </div><!-- /app-body -->
+</div><!-- /app -->
+
+<!-- ══════════════════════════════════════════
+     JOB DETAIL MODAL
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="job-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-job-title">Job Details</div>
+      <div class="modal-close" onclick="closeModal('job-modal')">✕</div>
+    </div>
+    <div class="modal-body" id="job-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('job-modal')">Close</button>
+      <button class="btn-secondary" onclick="printCurrentJob()">🖨 Print Receipt</button>
+      <button class="btn-primary" style="width:auto;padding:9px 18px;" onclick="downloadReceiptPDF()">📄 Download Receipt</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIPT MODAL -->
+<div class="modal-overlay" id="receipt-modal">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-header">
+      <div class="modal-title">🧾 Repair Receipt</div>
+      <div class="modal-close" onclick="closeModal('receipt-modal')">✕</div>
+    </div>
+    <div class="modal-body" id="receipt-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('receipt-modal')">Close</button>
+      <button class="btn-secondary" onclick="printReceipt()">🖨 Print</button>
+      <button class="btn-primary" style="width:auto;padding:9px 18px;" onclick="downloadReceiptAsPDF()">📥 Download PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOMER DETAIL MODAL -->
+<div class="modal-overlay" id="customer-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="cust-modal-title">Customer Profile</div>
+      <div class="modal-close" onclick="closeModal('customer-modal')">✕</div>
+    </div>
+    <div class="modal-body" id="customer-modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   DATA LAYER
+═══════════════════════════════════════════════════════════ */
+function loadData(){return JSON.parse(localStorage.getItem('jeam_jobs')||'[]');}
+function saveData(d){localStorage.setItem('jeam_jobs',JSON.stringify(d));}
+function loadSettings(){return JSON.parse(localStorage.getItem('jeam_settings')||'{"shopName":"Jeam Mobile\'s","shopPhone":"","address":"","username":"admin","password":"jeam2024","theme":"dark"}');}
+function saveSettings2(s){localStorage.setItem('jeam_settings',JSON.stringify(s));}
+
+let jobs=loadData();
+let settings=loadSettings();
+let currentTheme=settings.theme||'dark';
+let currentJobForReceipt=null;
+let cameraStream=null;
+let capturedPhotos=[];
+let uploadedPhotos=[];
+let uploadedVideos=[];
+let selectedColor='Black';
+let fpCurrentCustomer=null;
+
+/* ═══════════════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════════════ */
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pwd').value.trim();
+  const btn=document.getElementById('login-btn');
+  if(!u||!p){showLoginErr('Please enter username and password.');return;}
+  btn.classList.add('loading');
+  setTimeout(()=>{
+    btn.classList.remove('loading');
+    const s=loadSettings();
+    if(u===s.username&&p===s.password){
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('app').classList.add('visible');
+      applyTheme(currentTheme);
+      updateDashboard();
+      toast('Welcome back! 👋','success');
+    } else {
+      showLoginErr('Invalid username or password.');
+    }
+  },800);
+}
+function showLoginErr(m){
+  const e=document.getElementById('login-err');
+  document.getElementById('login-err-msg').textContent=m;
+  e.classList.add('show');
+  setTimeout(()=>e.classList.remove('show'),3000);
+}
+function doLogout(){
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pwd').value='';
+  stopCamera();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════════════════ */
+function goto(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('nav-'+page).classList.add('active');
+  if(page==='dashboard')updateDashboard();
+  if(page==='jobs')renderJobs();
+  if(page==='customers')renderCustomers();
+  if(page==='reports')renderReports();
+  if(page==='settings')loadSettingsForm();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   THEME
+═══════════════════════════════════════════════════════════ */
+function applyTheme(t){
+  currentTheme=t;
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('theme-toggle').textContent=t==='dark'?'🌙':'☀️';
+}
+function toggleTheme(){
+  const nt=currentTheme==='dark'?'light':'dark';
+  applyTheme(nt);
+  const s=loadSettings();s.theme=nt;saveSettings2(s);
+}
+function setTheme(t){applyTheme(t);const s=loadSettings();s.theme=t;saveSettings2(s);toast('Theme changed!','info');}
+applyTheme(currentTheme);
+
+/* ═══════════════════════════════════════════════════════════
+   FINGERPRINT SIMULATION
+═══════════════════════════════════════════════════════════ */
+let fpScanTimeout=null;
+function scanFingerprint(){
+  const scanner=document.getElementById('fp-scanner');
+  const status=document.getElementById('fp-status');
+  const card=document.getElementById('fp-result-card');
+  scanner.classList.add('scanning');
+  status.textContent='🔍 Scanning fingerprint...';
+  card.classList.remove('show');
+  fpCurrentCustomer=null;
+  clearTimeout(fpScanTimeout);
+  fpScanTimeout=setTimeout(()=>{
+    scanner.classList.remove('scanning');
+    const custs=getUniqueCustomers();
+    if(custs.length===0){
+      status.textContent='❌ No returning customers found. Fill in form as new customer.';
+      scanner.style.borderColor='var(--red)';
+      setTimeout(()=>scanner.style.borderColor='',2000);
+      return;
+    }
+    // Simulate: pick a random returning customer
+    const found=custs[Math.floor(Math.random()*custs.length)];
+    fpCurrentCustomer=found;
+    scanner.classList.add('success');
+    status.textContent='✅ Fingerprint matched!';
+
+    document.getElementById('fp-cust-name').textContent=found.name;
+    document.getElementById('fp-cust-meta').textContent=found.phone+' · '+found.jobs.length+' previous repair'+(found.jobs.length!==1?'s':'');
+
+    const avatar=document.getElementById('fp-avatar');
+    if(found.photo){avatar.innerHTML='<img src="'+found.photo+'" />';}
+    else{avatar.textContent=found.name.charAt(0).toUpperCase();}
+
+    const hist=document.getElementById('fp-history-list');
+    hist.innerHTML=found.jobs.slice(0,3).map(j=>`
+      <div class="fp-history-item">
+        <span>${j.device} — ${j.problem.slice(0,30)}...</span>
+        <span>${formatDate(j.date)}</span>
+      </div>`).join('');
+    card.classList.add('show');
+    toast('Returning customer found: '+found.name,'success');
+  },2000);
+}
+
+function loadCustomerToForm(){
+  if(!fpCurrentCustomer)return;
+  document.getElementById('f-name').value=fpCurrentCustomer.name;
+  document.getElementById('f-phone').value=fpCurrentCustomer.phone;
+  if(fpCurrentCustomer.photo){
+    const prev=document.getElementById('photo-preview');
+    prev.innerHTML=`<div class="media-thumb-wrap"><img class="media-thumb" src="${fpCurrentCustomer.photo}" /></div>`;
+    uploadedPhotos=[fpCurrentCustomer.photo];
+  }
+  goto('new-job');
+  toast('Customer info loaded! ✅','success');
+}
+
+function getUniqueCustomers(){
+  const jobs=loadData();
+  const map={};
+  jobs.forEach(j=>{
+    const key=j.phone;
+    if(!map[key]){map[key]={name:j.name,phone:j.phone,photo:j.photos&&j.photos[0]||'',jobs:[]};}
+    map[key].jobs.push(j);
+  });
+  return Object.values(map).filter(c=>c.jobs.length>0);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CAMERA
+═══════════════════════════════════════════════════════════ */
+async function startCamera(){
+  try{
+    cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
+    const vid=document.getElementById('camera-video');
+    vid.srcObject=cameraStream;
+    document.getElementById('camera-wrap').style.display='flex';
+    document.getElementById('snap-btn').style.display='inline-flex';
+    document.getElementById('stop-cam-btn').style.display='inline-flex';
+  }catch(e){toast('Camera access denied or unavailable.','error');}
+}
+function stopCamera(){
+  if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}
+  document.getElementById('camera-wrap').style.display='none';
+  document.getElementById('snap-btn').style.display='none';
+  document.getElementById('stop-cam-btn').style.display='none';
+}
+function snapPhoto(){
+  const vid=document.getElementById('camera-video');
+  const canvas=document.getElementById('snap-canvas');
+  canvas.width=vid.videoWidth;canvas.height=vid.videoHeight;
+  canvas.getContext('2d').drawImage(vid,0,0);
+  const dataUrl=canvas.toDataURL('image/jpeg',0.8);
+  capturedPhotos.push(dataUrl);
+  const prev=document.getElementById('capture-preview');
+  const img=document.createElement('img');
+  img.className='capture-img';img.src=dataUrl;
+  prev.appendChild(img);
+  uploadedPhotos.push(dataUrl);
+  toast('Photo captured! 📸','success');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FILE UPLOADS
+═══════════════════════════════════════════════════════════ */
+function handlePhotoUpload(e){
+  const files=Array.from(e.target.files);
+  const prev=document.getElementById('photo-preview');
+  files.forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      uploadedPhotos.push(ev.target.result);
+      const wrap=document.createElement('div');wrap.className='media-thumb-wrap';
+      const img=document.createElement('img');img.className='media-thumb';img.src=ev.target.result;
+      const rm=document.createElement('button');rm.className='rm-media';rm.textContent='✕';
+      rm.onclick=()=>{uploadedPhotos=uploadedPhotos.filter(p=>p!==ev.target.result);wrap.remove();};
+      wrap.appendChild(img);wrap.appendChild(rm);prev.appendChild(wrap);
+    };reader.readAsDataURL(f);
+  });
+}
+function handleVideoUpload(e){
+  const files=Array.from(e.target.files);
+  const prev=document.getElementById('video-preview');
+  files.forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      uploadedVideos.push(ev.target.result);
+      const wrap=document.createElement('div');wrap.className='media-thumb-wrap';
+      const thumb=document.createElement('div');thumb.className='video-thumb';thumb.innerHTML='🎥';
+      thumb.title=f.name;
+      const rm=document.createElement('button');rm.className='rm-media';rm.textContent='✕';
+      rm.onclick=()=>{uploadedVideos=uploadedVideos.filter(v=>v!==ev.target.result);wrap.remove();};
+      wrap.appendChild(thumb);wrap.appendChild(rm);prev.appendChild(wrap);
+      toast('Video added: '+f.name,'info');
+    };reader.readAsDataURL(f);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COLOR PICKER
+═══════════════════════════════════════════════════════════ */
+function pickColor(el){
+  document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedColor=el.dataset.color;
+  document.getElementById('f-color-text').value=selectedColor;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SAVE JOB
+═══════════════════════════════════════════════════════════ */
+function saveJob(){
+  const name=document.getElementById('f-name').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const device=document.getElementById('f-device').value.trim();
+  const problem=document.getElementById('f-problem').value.trim();
+  const price=parseFloat(document.getElementById('f-price').value)||0;
+  const color=document.getElementById('f-color-text').value.trim()||selectedColor;
+  const status=document.getElementById('f-status').value;
+  const tech=document.getElementById('f-tech').value.trim();
+  const notes=document.getElementById('f-notes').value.trim();
+
+  if(!name){toast('Please enter customer name','error');return;}
+  if(!phone){toast('Please enter phone number','error');return;}
+  if(!device){toast('Please enter device name','error');return;}
+  if(!problem){toast('Please enter problem description','error');return;}
+  if(price<=0){toast('Please enter a valid price','error');return;}
+
+  const job={
+    id:'JM-'+Date.now(),
+    name,phone,device,problem,price,color,status,tech,notes,
+    photos:uploadedPhotos.slice(),
+    videos:uploadedVideos.slice(),
+    date:new Date().toISOString(),
+    lastUpdated:new Date().toISOString()
+  };
+
+  jobs=loadData();
+  jobs.unshift(job);
+  saveData(jobs);
+
+  toast('Job saved successfully! 🎉','success');
+  clearForm();
+  goto('jobs');
+}
+
+function clearForm(){
+  ['f-name','f-phone','f-device','f-problem','f-color-text','f-tech','f-notes'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  document.getElementById('f-price').value='';
+  document.getElementById('f-status').value='pending';
+  document.getElementById('photo-preview').innerHTML='';
+  document.getElementById('video-preview').innerHTML='';
+  document.getElementById('capture-preview').innerHTML='';
+  document.getElementById('fp-result-card').classList.remove('show');
+  document.getElementById('fp-status').textContent='Place finger on scanner or click to simulate scan';
+  document.getElementById('fp-scanner').classList.remove('success','scanning');
+  uploadedPhotos=[];uploadedVideos=[];capturedPhotos=[];fpCurrentCustomer=null;
+  selectedColor='Black';
+  document.querySelectorAll('.color-dot').forEach((d,i)=>d.classList.toggle('selected',i===0));
+  stopCamera();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════════════════════════ */
+function updateDashboard(){
+  jobs=loadData();
+  const pending=jobs.filter(j=>j.status==='pending'||j.status==='working').length;
+  const done=jobs.filter(j=>j.status==='done'||j.status==='collected').length;
+  const revenue=jobs.reduce((s,j)=>s+(j.status==='collected'||j.status==='done'?j.price:0),0);
+  const custs=getUniqueCustomers();
+  const returning=custs.filter(c=>c.jobs.length>1).length;
+
+  document.getElementById('stat-total').textContent=jobs.length;
+  document.getElementById('stat-pending').textContent=pending;
+  document.getElementById('stat-done').textContent=done;
+  document.getElementById('stat-revenue').textContent='₦'+revenue.toLocaleString();
+  document.getElementById('stat-customers').textContent=custs.length;
+  document.getElementById('stat-returning').textContent=returning;
+
+  // Greeting
+  const h=new Date().getHours();
+  const g=h<12?'Good morning':'h<18'?'Good afternoon':'Good evening';
+  document.getElementById('dash-greeting').textContent=(h<12?'Good morning':'h<17?Good afternoon':'Good evening')+'! Here\'s your repair shop overview.';
+
+  // Recent jobs
+  const recentEl=document.getElementById('dash-recent-jobs');
+  if(jobs.length===0){recentEl.innerHTML='<div class="empty-state"><span class="empty-icon">📋</span><p>No jobs yet</p></div>';return;}
+  recentEl.innerHTML=jobs.slice(0,6).map(j=>`
+    <div class="recent-job-row">
+      <div>
+        <div class="rj-name">${j.name}</div>
+        <div class="rj-phone">${j.device}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="rj-price">₦${j.price.toLocaleString()}</div>
+        <div>${statusBadge(j.status)}</div>
+      </div>
+    </div>`).join('');
+
+  // Status breakdown
+  const breakdown=document.getElementById('dash-status-breakdown');
+  const counts={pending:0,working:0,done:0,collected:0,cancelled:0};
+  jobs.forEach(j=>counts[j.status]=(counts[j.status]||0)+1);
+  const icons={pending:'⏳',working:'🔧',done:'✅',collected:'📦',cancelled:'❌'};
+  const labels={pending:'Pending',working:'In Progress',done:'Done',collected:'Collected',cancelled:'Cancelled'};
+  breakdown.innerHTML=Object.entries(counts).map(([s,c])=>c>0?`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+      <span>${icons[s]} ${labels[s]}</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:80px;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;">
+          <div style="width:${jobs.length?Math.round(c/jobs.length*100):0}%;height:100%;background:var(--accent);border-radius:3px;"></div>
+        </div>
+        <span style="font-weight:700;">${c}</span>
+      </div>
+    </div>`:'').join('');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER JOBS
+═══════════════════════════════════════════════════════════ */
+function renderJobs(){
+  jobs=loadData();
+  const q=(document.getElementById('jobs-search').value||'').toLowerCase();
+  const filt=document.getElementById('jobs-filter').value;
+  let filtered=jobs.filter(j=>{
+    const match=!q||(j.name+j.phone+j.device+j.problem).toLowerCase().includes(q);
+    const sf=!filt||j.status===filt;
+    return match&&sf;
+  });
+
+  const tbody=document.getElementById('jobs-tbody');
+  if(filtered.length===0){
+    tbody.innerHTML=`<tr><td colspan="9"><div class="empty-state"><span class="empty-icon">🔍</span><p>No jobs found</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML=filtered.map((j,i)=>{
+    const colorHex={Black:'#111',White:'#fff',Blue:'#1e90ff',Red:'#ff4757',Green:'#2ed573',Gold:'#ffd43b',Silver:'#c0c0c0',Purple:'#9b59b6',Orange:'#ff6b2b','Rose Gold':'#f8f0e3'}[j.color]||'#888';
+    return`<tr>
+      <td style="color:var(--text3);font-size:0.78rem;">${filtered.length-i}</td>
+      <td>
+        <div class="cust-cell">
+          <div class="cust-avatar">${j.photos&&j.photos[0]?`<img src="${j.photos[0]}" />`:(j.name||'?').charAt(0).toUpperCase()}</div>
+          <div><div class="cust-name">${j.name}</div><div class="cust-phone">${j.phone}</div></div>
+        </div>
+      </td>
+      <td><div class="job-phone">${j.device}</div></td>
+      <td><div class="job-problem">${j.problem}</div></td>
+      <td><div class="color-tag"><div class="color-swatch" style="background:${colorHex};"></div>${j.color||'—'}</div></td>
+      <td><div class="job-price">₦${j.price.toLocaleString()}</div></td>
+      <td>
+        <select class="status-select" onchange="updateStatus('${j.id}',this.value)">
+          <option value="pending" ${j.status==='pending'?'selected':''}>⏳ Pending</option>
+          <option value="working" ${j.status==='working'?'selected':''}>🔧 Working</option>
+          <option value="done" ${j.status==='done'?'selected':''}>✅ Done</option>
+          <option value="collected" ${j.status==='collected'?'selected':''}>📦 Collected</option>
+          <option value="cancelled" ${j.status==='cancelled'?'selected':''}>❌ Cancelled</option>
+        </select>
+      </td>
+      <td style="font-size:0.78rem;color:var(--text2);">${formatDate(j.date)}</td>
+      <td>
+        <div class="job-actions">
+          <div class="act-btn" title="View Details" onclick="viewJob('${j.id}')">👁</div>
+          <div class="act-btn" title="Receipt" onclick="showReceipt('${j.id}')">🧾</div>
+          <div class="act-btn" title="Delete" onclick="deleteJob('${j.id}')" style="color:var(--red);">🗑</div>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function statusBadge(s){
+  const m={pending:'<span class="status-badge s-pending">⏳ Pending</span>',working:'<span class="status-badge s-working">🔧 Working</span>',done:'<span class="status-badge s-done">✅ Done</span>',collected:'<span class="status-badge s-collected">📦 Collected</span>',cancelled:'<span class="status-badge s-cancelled">❌ Cancelled</span>'};
+  return m[s]||s;
+}
+
+function updateStatus(id,newStatus){
+  jobs=loadData();
+  const j=jobs.find(x=>x.id===id);
+  if(j){j.status=newStatus;j.lastUpdated=new Date().toISOString();}
+  saveData(jobs);
+  toast('Status updated!','success');
+  updateDashboard();
+}
+
+function deleteJob(id){
+  if(!confirm('Delete this repair job? This cannot be undone.'))return;
+  jobs=loadData().filter(j=>j.id!==id);
+  saveData(jobs);renderJobs();updateDashboard();
+  toast('Job deleted.','info');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VIEW JOB MODAL
+═══════════════════════════════════════════════════════════ */
+function viewJob(id){
+  jobs=loadData();
+  const j=jobs.find(x=>x.id===id);
+  if(!j)return;
+  currentJobForReceipt=j;
+  document.getElementById('modal-job-title').textContent='Job: '+j.id;
+  const body=document.getElementById('job-modal-body');
+  const colorHex={Black:'#111',White:'#eee',Blue:'#1e90ff',Red:'#ff4757',Green:'#2ed573',Gold:'#ffd43b',Silver:'#c0c0c0',Purple:'#9b59b6',Orange:'#ff6b2b','Rose Gold':'#f8f0e3'}[j.color]||'#888';
+  body.innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.5rem;">
+      <div class="cust-avatar" style="width:56px;height:56px;font-size:1.3rem;">${j.photos&&j.photos[0]?`<img src="${j.photos[0]}" />`:(j.name||'?').charAt(0).toUpperCase()}</div>
+      <div>
+        <div style="font-family:var(--font-head);font-size:1.2rem;font-weight:800;">${j.name}</div>
+        <div style="color:var(--text2);font-size:0.85rem;">${j.phone}</div>
+        <div style="margin-top:4px;">${statusBadge(j.status)}</div>
+      </div>
+    </div>
+    <div class="detail-grid" style="margin-bottom:1.5rem;">
+      <div><div class="detail-label">Job ID</div><div class="detail-value">${j.id}</div></div>
+      <div><div class="detail-label">Date</div><div class="detail-value">${formatDate(j.date)}</div></div>
+      <div><div class="detail-label">Device</div><div class="detail-value">${j.device}</div></div>
+      <div><div class="detail-label">Color</div><div class="detail-value"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:50%;background:${colorHex};border:1px solid var(--border2);display:inline-block;"></span>${j.color||'—'}</span></div></div>
+      <div><div class="detail-label">Repair Price</div><div class="detail-value" style="font-size:1.2rem;font-weight:700;color:var(--accent);">₦${j.price.toLocaleString()}</div></div>
+      <div><div class="detail-label">Technician</div><div class="detail-value">${j.tech||'—'}</div></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">Problem / Fault</div>
+      <div class="detail-value" style="background:var(--bg3);padding:10px 14px;border-radius:8px;margin-top:4px;">${j.problem}</div>
+    </div>
+    ${j.notes?`<div class="detail-section"><div class="detail-label">Notes</div><div class="detail-value" style="background:var(--bg3);padding:10px 14px;border-radius:8px;margin-top:4px;">${j.notes}</div></div>`:''}
+    ${j.photos&&j.photos.length?`<div class="detail-section"><div class="detail-label" style="margin-bottom:8px;">Photos (${j.photos.length})</div><div class="media-gallery">${j.photos.map(p=>`<img class="gallery-item" src="${p}" onclick="window.open(this.src)" />`).join('')}</div></div>`:''}
+    ${j.videos&&j.videos.length?`<div class="detail-section"><div class="detail-label" style="margin-bottom:8px;">Videos (${j.videos.length})</div><div class="media-gallery">${j.videos.map(v=>`<div class="gallery-item" style="display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--bg3);">🎥</div>`).join('')}</div></div>`:''}
+    <div class="detail-section">
+      <div class="detail-label">Update Status</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+        ${['pending','working','done','collected','cancelled'].map(s=>`<button class="btn-secondary" style="${j.status===s?'border-color:var(--accent);color:var(--accent);':''}" onclick="updateStatus('${j.id}','${s}');closeModal('job-modal');renderJobs();">${statusBadge(s)}</button>`).join('')}
+      </div>
+    </div>`;
+  openModal('job-modal');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RECEIPT
+═══════════════════════════════════════════════════════════ */
+function showReceipt(id){
+  jobs=loadData();
+  const j=jobs.find(x=>x.id===id)||currentJobForReceipt;
+  if(!j)return;
+  currentJobForReceipt=j;
+  const s=loadSettings();
+  document.getElementById('receipt-body').innerHTML=buildReceiptHTML(j,s);
+  openModal('receipt-modal');
+}
+
+function buildReceiptHTML(j,s){
+  return`<div class="receipt" id="receipt-print-area">
+    <div class="receipt-header">
+      <div class="receipt-logo">${s.shopName||"Jeam Mobile's"}</div>
+      <div class="receipt-sub">Professional Phone Repair</div>
+      ${s.address?`<div class="receipt-sub">${s.address}</div>`:''}
+      ${s.shopPhone?`<div class="receipt-sub">Tel: ${s.shopPhone}</div>`:''}
+    </div>
+    <div class="receipt-section-title">RECEIPT</div>
+    <div class="receipt-row"><span>Job ID:</span><span>${j.id}</span></div>
+    <div class="receipt-row"><span>Date:</span><span>${formatDate(j.date)}</span></div>
+    <hr class="receipt-divider"/>
+    <div class="receipt-section-title">CUSTOMER</div>
+    <div class="receipt-row"><span>Name:</span><span>${j.name}</span></div>
+    <div class="receipt-row"><span>Phone:</span><span>${j.phone}</span></div>
+    <hr class="receipt-divider"/>
+    <div class="receipt-section-title">DEVICE</div>
+    <div class="receipt-row"><span>Device:</span><span>${j.device}</span></div>
+    <div class="receipt-row"><span>Color:</span><span>${j.color||'—'}</span></div>
+    <div class="receipt-row"><span>Problem:</span><span style="max-width:180px;text-align:right;">${j.problem}</span></div>
+    ${j.tech?`<div class="receipt-row"><span>Technician:</span><span>${j.tech}</span></div>`:''}
+    <hr class="receipt-divider"/>
+    <div class="receipt-section-title">PRICING</div>
+    <div class="receipt-row total"><span>TOTAL AMOUNT:</span><span>₦${j.price.toLocaleString()}</span></div>
+    <div class="receipt-row"><span>Status:</span><span>${j.status.toUpperCase()}</span></div>
+    ${j.notes?`<hr class="receipt-divider"/><div class="receipt-section-title">NOTES</div><div style="font-size:0.78rem;">${j.notes}</div>`:''}
+    <div class="receipt-footer">
+      Thank you for choosing ${s.shopName||"Jeam Mobile's"}!<br>
+      Please keep this receipt for your records.<br>
+      <strong>Printed: ${new Date().toLocaleString()}</strong>
+    </div>
+  </div>`;
+}
+
+function printCurrentJob(){if(currentJobForReceipt)showReceipt(currentJobForReceipt.id);}
+function printReceipt(){
+  const el=document.getElementById('receipt-print-area');
+  if(!el)return;
+  const win=window.open('','_blank');
+  win.document.write(`<html><head><title>Receipt</title><style>body{font-family:'Courier New',monospace;padding:20px;}${document.querySelector('style').textContent}</style></head><body>${el.outerHTML}<script>window.onload=()=>{window.print();window.close();}<\/script></body></html>`);
+  win.document.close();
+}
+function downloadReceiptAsPDF(){
+  toast('Tip: Use browser Print → Save as PDF to download receipt.','info');
+  printReceipt();
+}
+function downloadReceiptPDF(){if(currentJobForReceipt)showReceipt(currentJobForReceipt.id);downloadReceiptAsPDF();}
+
+/* ═══════════════════════════════════════════════════════════
+   CUSTOMERS
+═══════════════════════════════════════════════════════════ */
+function renderCustomers(){
+  const custs=getUniqueCustomers();
+  const q=(document.getElementById('cust-search').value||'').toLowerCase();
+  const filtered=custs.filter(c=>!q||(c.name+c.phone).toLowerCase().includes(q));
+  document.getElementById('cust-count').textContent=filtered.length+' customer'+(filtered.length!==1?'s':'');
+  const grid=document.getElementById('customers-grid');
+  if(filtered.length===0){grid.innerHTML='<div class="empty-state"><span class="empty-icon">👥</span><p>No customers found</p></div>';return;}
+  grid.innerHTML=filtered.map(c=>{
+    const totalSpend=c.jobs.reduce((s,j)=>s+j.price,0);
+    return`<div class="customer-card" onclick="viewCustomer('${c.phone}')">
+      <div class="cc-header">
+        <div class="cc-avatar">${c.photo?`<img src="${c.photo}" />`:(c.name||'?').charAt(0).toUpperCase()}</div>
+        <div>
+          <div class="cc-name">${c.name}</div>
+          <div class="cc-phone-num">📞 ${c.phone}</div>
+          ${c.jobs.length>1?'<div class="cc-fp-badge">🔄 Returning</div>':''}
+        </div>
+      </div>
+      <div class="cc-stats">
+        <div class="cc-stat"><div class="cc-stat-num">${c.jobs.length}</div><div class="cc-stat-label">Repairs</div></div>
+        <div class="cc-stat"><div class="cc-stat-num">₦${totalSpend.toLocaleString()}</div><div class="cc-stat-label">Total Spent</div></div>
+        <div class="cc-stat"><div class="cc-stat-num">${formatDate(c.jobs[0].date)}</div><div class="cc-stat-label">Last Visit</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function viewCustomer(phone){
+  const custs=getUniqueCustomers();
+  const c=custs.find(x=>x.phone===phone);
+  if(!c)return;
+  const totalSpend=c.jobs.reduce((s,j)=>s+j.price,0);
+  document.getElementById('cust-modal-title').textContent='👤 '+c.name;
+  document.getElementById('customer-modal-body').innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.5rem;">
+      <div class="cust-avatar" style="width:64px;height:64px;font-size:1.4rem;">${c.photo?`<img src="${c.photo}" />`:(c.name||'?').charAt(0).toUpperCase()}</div>
+      <div>
+        <div style="font-family:var(--font-head);font-size:1.3rem;font-weight:800;">${c.name}</div>
+        <div style="color:var(--text2);">📞 ${c.phone}</div>
+        ${c.jobs.length>1?'<div class="cc-fp-badge" style="margin-top:6px;">🔄 Returning Customer · '+c.jobs.length+' repairs</div>':''}
+      </div>
+    </div>
+    <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="stat-card"><span class="stat-icon">🔧</span><div class="stat-num">${c.jobs.length}</div><div class="stat-label">Total Repairs</div></div>
+      <div class="stat-card"><span class="stat-icon">💰</span><div class="stat-num">₦${totalSpend.toLocaleString()}</div><div class="stat-label">Total Spent</div></div>
+      <div class="stat-card"><span class="stat-icon">📅</span><div class="stat-num" style="font-size:1rem;">${formatDate(c.jobs[0].date)}</div><div class="stat-label">Last Visit</div></div>
+    </div>
+    <div style="margin-top:1.5rem;">
+      <div class="dash-card-title"><span class="dot"></span>Repair History</div>
+      ${c.jobs.map(j=>`
+        <div style="background:var(--bg3);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div style="font-weight:600;">${j.device}</div>
+            <div style="color:var(--text2);font-size:0.8rem;margin-top:2px;">${j.problem.slice(0,60)}...</div>
+            <div style="font-size:0.75rem;color:var(--text3);margin-top:4px;">${formatDate(j.date)}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:700;color:var(--accent);">₦${j.price.toLocaleString()}</div>
+            <div style="margin-top:4px;">${statusBadge(j.status)}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+  openModal('customer-modal');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   REPORTS
+═══════════════════════════════════════════════════════════ */
+function renderReports(){
+  jobs=loadData();
+  const done=jobs.filter(j=>j.status==='done'||j.status==='collected');
+  const revenue=done.reduce((s,j)=>s+j.price,0);
+  const custs=getUniqueCustomers();
+  const avg=done.length?Math.round(revenue/done.length):0;
+
+  document.getElementById('rep-revenue').textContent='₦'+revenue.toLocaleString();
+  document.getElementById('rep-done').textContent=done.length;
+  document.getElementById('rep-custs').textContent=custs.length;
+  document.getElementById('rep-avg').textContent='₦'+avg.toLocaleString();
+
+  // Top devices
+  const devMap={};
+  jobs.forEach(j=>{const d=j.device.split(' ').slice(0,2).join(' ');devMap[d]=(devMap[d]||0)+1;});
+  const sorted=Object.entries(devMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const max=sorted[0]?sorted[0][1]:1;
+  document.getElementById('rep-devices').innerHTML=sorted.map(([d,c])=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+      <span style="min-width:140px;">📱 ${d}</span>
+      <div style="flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;">
+        <div style="width:${Math.round(c/max*100)}%;height:100%;background:var(--accent);border-radius:3px;"></div>
+      </div>
+      <span style="font-weight:700;min-width:30px;text-align:right;">${c}</span>
+    </div>`).join('')||'<div class="empty-state"><span class="empty-icon">📊</span><p>No data yet</p></div>';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SETTINGS
+═══════════════════════════════════════════════════════════ */
+function loadSettingsForm(){
+  const s=loadSettings();
+  document.getElementById('set-shopname').value=s.shopName||'';
+  document.getElementById('set-shopphone').value=s.shopPhone||'';
+  document.getElementById('set-address').value=s.address||'';
+  document.getElementById('set-user').value=s.username||'admin';
+  document.getElementById('set-pwd').value='';
+}
+function saveSettings(){
+  const s=loadSettings();
+  s.shopName=document.getElementById('set-shopname').value.trim()||s.shopName;
+  s.shopPhone=document.getElementById('set-shopphone').value.trim();
+  s.address=document.getElementById('set-address').value.trim();
+  const nu=document.getElementById('set-user').value.trim();
+  const np=document.getElementById('set-pwd').value.trim();
+  if(nu)s.username=nu;
+  if(np)s.password=np;
+  s.theme=currentTheme;
+  saveSettings2(s);
+  settings=s;
+  toast('Settings saved! ✅','success');
+}
+function exportAllData(){
+  const data={jobs:loadData(),settings:loadSettings(),exported:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='jeam-mobiles-backup-'+Date.now()+'.json';a.click();
+  toast('Data exported!','success');
+}
+function clearAllData(){
+  if(!confirm('⚠️ This will delete ALL jobs and customer data. Are you absolutely sure?'))return;
+  if(!confirm('Really delete everything? This CANNOT be undone.'))return;
+  localStorage.removeItem('jeam_jobs');
+  jobs=[];
+  toast('All data cleared.','info');
+  updateDashboard();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   EXPORT CSV
+═══════════════════════════════════════════════════════════ */
+function exportCSV(){
+  const jobs=loadData();
+  const rows=[['ID','Name','Phone','Device','Color','Problem','Price','Status','Technician','Date']];
+  jobs.forEach(j=>rows.push([j.id,j.name,j.phone,j.device,j.color||'',`"${j.problem.replace(/"/g,'""')}"`,j.price,j.status,j.tech||'',formatDate(j.date)]));
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='jeam-jobs-'+Date.now()+'.csv';a.click();
+  toast('CSV exported!','success');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════════════════════ */
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
+});
+
+/* ═══════════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════════ */
+function toast(msg,type='info'){
+  const c=document.getElementById('toasts');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  const icons={success:'✅',error:'❌',info:'ℹ️'};
+  t.innerHTML=`<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(()=>{t.classList.add('removing');setTimeout(()=>t.remove(),300);},3000);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════════════════ */
+function formatDate(iso){
+  if(!iso)return'—';
+  const d=new Date(iso);
+  return d.toLocaleDateString('en-NG',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+// Init
+document.getElementById('login-user').focus();
+</script>
+</body>
+</html>
